@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Frodo</title>
+  </head>
+
+  <body>
+    <script src="../../dist/simple-peer-wrapper.js"></script>
+    <script src="../shared/p5.min.js"></script>
+    <script src="https://static.robotwebtools.org/roslibjs/current/roslib.min.js"></script>
+    <!--<script src="/socket.io/socket.io.js"></script>-->
+    <!--<script src="./sketch.js"></script>-->
+
+
+    <!-- <div id = "sse">
+        <a href = "javascript:WebSocketTest()">Run WebSocket</a>
+    </div> -->
+    <h2>key teleop q:decrease throttle e:increase throttle w:go s:stop a:left d:right</h2>
+    <p>System</p>
+    <div id="CONNECTION STATUS">NOT CONNECTED!</div>
+    <div id="CAMS LINK">NULL</div>
+    <div id="POWERVOLTAGE">0</div>
+
+<!--    <p>GPS</p>
+    <div id="LATITUDE">0.0</div>
+    <div id="LONGTITUDE">0.0</div>
+-->
+
+    <p>Gamepad Customisation</p>
+    <div id="Gp_Steering_Bias">steering bias = 0</div>
+    <div id="Gp_Throttle_Level">throttle factor = 0</div>
+
+
+    <p>Keyboard Customisation</p>
+    <p>Me</p>
+    <div id="Steering">my steering = 0</div>
+    <div id="Throttle">my throttle = 0</div>
+    <div id="Throttle_factor">my throttle_factor = 0.2</div>
+
+    <p>You</p>
+    <div id="Steering">your steering = 0</div>
+    <div id="Throttle">your throttle = 0</div>
+    <div id="Throttle_factor">your throttle_factor = 0.2</div>
+
+    <div id="this_buffer">a buffer</div>
+
+    <div id="gamepad-info">gamepad-info</div>
+
+    <div id="debug">debug</div>
+
+
+    <form id="siangform" action="">
+        <input id="sianginput" autocomplete="off"/>
+        <button>Send</button>
+    </form>
+
+        <h1 style = "color:green;" > 
+            GeeksForGeeks
+        </h1>
+          
+        <p id = "GFG_UP" style =
+            "font-size: 19px; font-weight: bold;">
+        </p>
+          
+        <button onclick = "GFG_Fun()">
+            get your links
+        </button>
+
+
+    <script>
+            var el_up = document.getElementById("GFG_UP");
+            var el_down = document.getElementById("GFG_DOWN");
+              
+            el_up.innerHTML = "Click the button to generate "
+                    + "your links";
+              
+            function GFG_Fun() {
+                  
+                // Create anchor element.
+                var a = document.createElement('a'); 
+                  
+                // Create the text node for anchor element.
+                var link = document.createTextNode("This is link");
+                  
+                // Append the text node to anchor element.
+                a.appendChild(link); 
+                  
+                // Set the title.
+                a.title = "This is Link"; 
+                  
+                // Set the href property.
+                //a.href = "https://www.geeksforgeeks.org";
+                  
+                // Append the anchor element to the body.
+                document.body.appendChild(a); 
+            }
+
+            //function setLocation(base: string) {
+            //    window.location.href = base;
+            //}           
+
+        </script>
+
+    <script src="/frodov2sg0.js"></script>
+
+  </body>
+</html>
+    <div id="Throttle_factor">my throttle_factor = 0.2</div>
