@@ -1,0 +1,60 @@
+diff --git a/config/velocity_smoother_params.yaml b/config/velocity_smoother_params.yaml
+index d1e35ec..c5765eb 100644
+--- a/config/velocity_smoother_params.yaml
++++ b/config/velocity_smoother_params.yaml
+@@ -4,20 +4,20 @@
+ velocity_smoother:
+   ros__parameters:
+     # limits
+-    speed_lim_v: 0.8
+-    speed_lim_w: 5.4
++    speed_lim_v: 0.98
++    speed_lim_w: 4.8   # was 5.4
+ 
+-    accel_lim_v: 0.3
+-    accel_lim_w: 3.5
++    accel_lim_v: 0.5   # was 0.3
++    accel_lim_w: 3.2   # was 3.5
+ 
+     # multiply the acceleration limit by this to permit faster decellerations
+-    decel_factor: 1.0
++    decel_factor: 0.88
+ 
+     # recompute smoothed velocities at this rate
+-    frequency: 20.0
++    frequency: 4.0
+ 
+     # feedback type:
+     #  0 - none
+     #  1 - odometry
+     #  2 - actual commanded velocity (e.g. after it's been piped through a mux)
+-    feedback: 2
++    feedback: 0 
+diff --git a/launch/velocity_smoother-launch.py b/launch/velocity_smoother-launch.py
+index bf88d3d..bf8bfb0 100644
+--- a/launch/velocity_smoother-launch.py
++++ b/launch/velocity_smoother-launch.py
+@@ -30,8 +30,8 @@ def generate_launch_description():
+         params = yaml.safe_load(f)['velocity_smoother']['ros__parameters']
+     velocity_smoother_node = launch_ros.actions.Node(
+         package='velocity_smoother',
+-        node_executable='velocity_smoother',
+-        node_name='velocity_smoother',
++        executable='velocity_smoother',
++        name='velocity_smoother',
+         output='both',
+         parameters=[params])
+ 
+diff --git a/src/velocity_smoother.cpp b/src/velocity_smoother.cpp
+index 87cf930..fffda50 100644
+--- a/src/velocity_smoother.cpp
++++ b/src/velocity_smoother.cpp
+@@ -187,7 +187,7 @@ void VelocitySmoother::timerCB()
+     input_active_ = false;
+     if (target_vel_.linear.x != 0.0 || target_vel_.angular.z != 0.0)
+     {
+-      RCLCPP_WARN(get_logger(), "Velocity Smoother : input went inactive leaving us a non-zero target velocity (%d, %d), zeroing...",
++      RCLCPP_WARN(get_logger(), "Velocity Smoother : input went inactive leaving us a non-zero target velocity (%f, %f), zeroing...",
+                   target_vel_.linear.x,
+                   target_vel_.angular.z);
+       target_vel_ = geometry_msgs::msg::Twist();

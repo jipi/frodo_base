@@ -1,0 +1,61 @@
+diff --git a/config/nmea_serial_driver.yaml b/config/nmea_serial_driver.yaml
+index 1e3b55d..0776cab 100644
+--- a/config/nmea_serial_driver.yaml
++++ b/config/nmea_serial_driver.yaml
+@@ -1,7 +1,7 @@
+ nmea_navsat_driver:
+   ros__parameters:
+-    port: "/dev/tty.usbserial"
+-    baud: 4800
++    port: "/dev/serial/by-id/usb-SimTech__Incorporated_SimTech__Incorporated_0123456789ABCDEF-if01-port0"
++    baud: 9600
+     frame_id: "gps"
+     time_ref_source: "gps"
+-    useRMC: False
+\ No newline at end of file
++    useRMC: False
+diff --git a/config/nmea_socket_driver.yaml b/config/nmea_socket_driver.yaml
+index 8ca2f30..774ba18 100644
+--- a/config/nmea_socket_driver.yaml
++++ b/config/nmea_socket_driver.yaml
+@@ -1,6 +1,6 @@
+ nmea_navsat_driver:
+   ros__parameters:
+     ip: "0.0.0.0"
+-    port: 10110
++    port: 2947
+     buffer_size: 4096
+     timeout_sec: 2
+diff --git a/src/libnmea_navsat_driver/nodes/nmea_serial_driver.py b/src/libnmea_navsat_driver/nodes/nmea_serial_driver.py
+index 0db2d71..383b6ed 100755
+--- a/src/libnmea_navsat_driver/nodes/nmea_serial_driver.py
++++ b/src/libnmea_navsat_driver/nodes/nmea_serial_driver.py
+@@ -43,8 +43,8 @@ def main(args=None):
+     driver = Ros2NMEADriver()
+     frame_id = driver.get_frame_id()
+ 
+-    serial_port = driver.declare_parameter('port', '/dev/ttyUSB0').value
+-    serial_baud = driver.declare_parameter('baud', 4800).value
++    serial_port = driver.declare_parameter('port', '/dev/serial/by-id/usb-SimTech__Incorporated_SimTech__Incorporated_0123456789ABCDEF-if01-port0').value
++    serial_baud = driver.declare_parameter('baud', 115200).value
+ 
+     try:
+         GPS = serial.Serial(port=serial_port, baudrate=serial_baud, timeout=2)
+diff --git a/src/libnmea_navsat_driver/nodes/nmea_socket_driver.py b/src/libnmea_navsat_driver/nodes/nmea_socket_driver.py
+index da5dcad..7164624 100755
+--- a/src/libnmea_navsat_driver/nodes/nmea_socket_driver.py
++++ b/src/libnmea_navsat_driver/nodes/nmea_socket_driver.py
+@@ -43,10 +43,10 @@ def main(args=None):
+     driver = Ros2NMEADriver()
+ 
+     try:
+-        local_ip = driver.declare_parameter('ip', '0.0.0.0').value
+-        local_port = driver.declare_parameter('port', 10110).value
++        local_ip = driver.declare_parameter('ip', '127.0.0.1').value
++        local_port = driver.declare_parameter('port', 2947).value
+         buffer_size = driver.declare_parameter('buffer_size', 4096).value
+-        timeout = driver.declare_parameter('timeout_sec', 2).value
++        timeout = driver.declare_parameter('timeout_sec', 10).value
+     except KeyError as e:
+         driver.get_logger().err("Parameter %s not found" % e)
+         sys.exit(1)
