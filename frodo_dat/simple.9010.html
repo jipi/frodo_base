@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+ <script type="text/javascript" src="https://static.robotwebtools.org/EventEmitter2/current/eventemitter2.min.js"></script>
+ <script type="text/javascript" src="https://static.robotwebtools.org/roslibjs/current/roslib.min.js"></script>
+
+
+<script>
+  // Connecting to ROS
+  // -----------------
+  var ros = new ROSLIB.Ros();
+
+  // If there is an error on the backend, an 'error' emit will be emitted.
+  ros.on('error', function(error) {
+    document.getElementById('connecting').style.display = 'none';
+    document.getElementById('connected').style.display = 'none';
+    document.getElementById('closed').style.display = 'none';
+    document.getElementById('error').style.display = 'inline';
+    console.log(error);
+  });
+
+  // Find out exactly when we made a connection.
+  ros.on('connection', function() {
+    console.log('Connection made!');
+    //document.getElementById('connecting').style.display = 'none';
+    //document.getElementById('error').style.display = 'none';
+    //document.getElementById('closed').style.display = 'none';
+    //document.getElementById('connected').style.display = 'inline';
+  });
+
+  ros.on('close', function() {
+    console.log('Connection closed.');
+    //document.getElementById('connecting').style.display = 'none';
+    //document.getElementById('connected').style.display = 'none';
+    //document.getElementById('closed').style.display = 'inline';
+  });
+
+  // Create a connection to the rosbridge WebSocket server.
+  ros.connect('ws://nong.be:9010');
+
+
+  // Like when publishing a topic, we first create a Topic object with details of the topic's name
+  // and message type. Note that we can call publish or subscribe on the same topic object.
+  //var listener0 = new ROSLIB.Topic({
+  //  ros : ros,
+  //  name : '/PowerVoltage',
+  //  messageType : 'std_msgs/Float32'
+  //});
+
+  // Then we add a callback to be called every time a message is published on this topic.
+  //listener0.subscribe(function(msg0) {
+  //  document.getElementById('powervoltage').innerHTML = msg0.data
+  //});
+
+  var listener1 = new ROSLIB.Topic({
+    ros : ros,
+    name : '/velocity_smoother/smoothed',
+    messageType : 'geometry_msgs/Twist'
+  });
+
+  listener1.subscribe(function(msg1) {
+    document.getElementById('linearx').innerHTML = msg1.linear.x
+    document.getElementById('angularz').innerHTML = msg1.angular.z
+  });
+
+
+  // var listener2 = new ROSLIB.Topic({
+   // ros : ros,
+   // name : '/ackermann_cmd',
+   // messageType : 'ackermann_msgs/AckermannDriveStamped'
+  //});
+
+  //listener2.subscribe(function(msg2) {
+   // document.getElementById('speed').innerHTML = msg2.drive.speed
+   // document.getElementById('steering_angle').innerHTML = msg2.drive.steering_angle
+  //});
+
+
+  //var listener3 = new ROSLIB.Topic({
+  //  ros : ros,
+  //  name : '/lelio',
+  //  messageType : 'std_msgs/String'
+  //});
+
+  //listener3.subscribe(function(msg3) {
+  //  document.getElementById('rssi').innerHTML = msg3.data
+  //});
+
+</script>
+</head>
+
+<body>
+
+
+ <div id="Cmd Velocity">cmd vel</div>
+  linear x<p id='linearx'>..</p>
+  angular z<p id='angularz'>..</p>
+
+
+
+
+</body>
+</html>
