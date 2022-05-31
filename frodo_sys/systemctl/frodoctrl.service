@@ -1,0 +1,17 @@
+[Unit]
+Description=frodoctrl
+After=network.target
+
+[Service]
+Type=simple
+User=frodov2
+ExecStart=/home/frodov2/run6.sh
+#CPUSchedulingPolicy=fifo
+#CPUSchedulingPriority=49
+TimeoutStartSec=180
+TimeoutStopSec=infinity
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+

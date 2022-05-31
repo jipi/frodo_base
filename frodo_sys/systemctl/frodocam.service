@@ -1,0 +1,15 @@
+[Unit]
+Description=frodocam
+After=NetworkManager.service time-sync.target frodolaugh.service nvargus-daemon.service
+
+[Service]
+Type=simple
+User=frodov2
+ExecStart=/home/frodov2/run7.sh
+#CPUSchedulingPolicy=fifo
+#CPUSchedulingPriority=48
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+

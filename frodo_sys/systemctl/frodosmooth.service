@@ -1,0 +1,13 @@
+[Unit]
+Description=frodosmooth
+After=NetworkManager.service time-sync.target frodolaunch.service
+
+[Service]
+Type=simple
+User=frodov2
+ExecStart=/home/frodov2/run32.sh
+#Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+

@@ -1,0 +1,13 @@
+[Unit]
+Description=frodolaugh
+After=NetworkManager.service time-sync.target frodolaunch.service chisel.service
+
+[Service]
+Type=simple
+User=frodov2
+ExecStart=/home/frodov2/run3.sh
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+

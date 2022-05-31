@@ -1,0 +1,13 @@
+[Unit]
+Description=frodofront
+After=network.target frodonmea.service
+
+[Service]
+Type=simple
+User=frodov2
+ExecStart=/home/frodov2/run5.sh
+#Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+

@@ -1,0 +1,6 @@
+#!/bin/bash
+source /home/frodov2/.bashrc
+nohup /usr/bin/deepstream-app -c /home/frodov2/source1_csi_dec_infer_resnet_int8_720p.txt &
+PID=$!
+wait "$PID"
+

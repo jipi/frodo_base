@@ -1,0 +1,13 @@
+[Unit]
+Description=frodonmea
+After=NetworkManager.service time-sync.target frodolaugh.service
+
+[Service]
+Type=simple
+User=frodov2
+ExecStart=/home/frodov2/run4.sh
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+
