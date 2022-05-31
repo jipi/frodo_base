@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+ <style>
+   body {
+       background: #000;
+       font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif
+   }
+   .dl-item {
+      padding-top: 1.25rem;
+      padding-bottom: 1.25rem;
+      gap: 1rem;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      display: grid;
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+
+    dt {
+        grid-column: span 2 / span 2;
+color: #fff;
+font-weight: 700;
+font-size: 0.875rem;
+line-height: 1.25rem;
+    }
+
+    dd {
+        margin-top: 0px;
+grid-column: span 2 / span 2;
+color: #fff;
+font-weight: 700;
+font-size: 0.875rem;
+line-height: 1.25rem;
+    }
+ </style>
+ <script type="text/javascript" src="https://static.robotwebtools.org/EventEmitter2/current/eventemitter2.min.js"></script>
+ <script type="text/javascript" src="https://static.robotwebtools.org/roslibjs/current/roslib.min.js"></script>
+
+
+<script>
+  // Connecting to ROS
+  // -----------------
+  var ros = new ROSLIB.Ros();
+
+  // If there is an error on the backend, an 'error' emit will be emitted.
+  ros.on('error', function(error) {
+    document.getElementById('connecting').style.display = 'none';
+    document.getElementById('connected').style.display = 'none';
+    document.getElementById('closed').style.display = 'none';
+    document.getElementById('error').style.display = 'inline';
+    console.log(error);
+  });
+
+  // Find out exactly when we made a connection.
+  ros.on('connection', function() {
+    console.log('Connection made!');
+    //document.getElementById('connecting').style.display = 'none';
+    //document.getElementById('error').style.display = 'none';
+    //document.getElementById('closed').style.display = 'none';
+    //document.getElementById('connected').style.display = 'inline';
+  });
+
+  ros.on('close', function() {
+    console.log('Connection closed.');
+    //document.getElementById('connecting').style.display = 'none';
+    //document.getElementById('connected').style.display = 'none';
+    //document.getElementById('closed').style.display = 'inline';
+  });
+
+  // Create a connection to the rosbridge WebSocket server.
+  ros.connect('wss://nong.be:19010');
+
+
+  // Like when publishing a topic, we first create a Topic object with details of the topic's name
+  // and message type. Note that we can call publish or subscribe on the same topic object.
+  var listener0 = new ROSLIB.Topic({
+    ros : ros,
+    name : '/int32_publisher',
+    messageType : 'std_msgs/msg/Int32'
+  });
+
+   var vBat = 0.0;
+   var vBatPercent = 0;
+  // Then we add a callback to be called every time a message is published on this topic.
+  listener0.subscribe(function(msg0) {
+
+    vBat = msg0.data/100;
+    //vBatPercent = (vBat-20.5)/4.8*100;  //25.2
+    vBatPercent = (vBat-18.5)/7.4*100;    //24.0
+
+    document.getElementById('powervoltage').innerHTML = vBatPercent.toFixed(2)
+  });
+
+  var listener1 = new ROSLIB.Topic({
+    ros : ros,
+    name : '/velocity_smoother/smoothed',
+    messageType : 'geometry_msgs/Twist'
+  });
+
+  var  vSpeed = 0.0;
+
+  listener1.subscribe(function(msg1) {
+
+    vSpeed = msg1.linear.x/2.5*10;
+    document.getElementById('linearx').innerHTML = vSpeed.toFixed(2)
+    // document.getElementById('angularz').innerHTML = msg1.angular.z
+  });
+
+  var listener2 = new ROSLIB.Topic({
+    ros : ros,
+    name : '/ltesignal',
+    messageType : 'std_msgs/msg/String'
+  });
+
+
+  listener2.subscribe(function(msg2) {
+    document.getElementById('ltesignal').innerHTML = msg2.data
+  });
+
+  // var listener2 = new ROSLIB.Topic({
+   // ros : ros,
+   // name : '/ackermann_cmd',
+   // messageType : 'ackermann_msgs/AckermannDriveStamped'
+  //});
+
+  //listener2.subscribe(function(msg2) {
+   // document.getElementById('speed').innerHTML = msg2.drive.speed
+   // document.getElementById('steering_angle').innerHTML = msg2.drive.steering_angle
+  //});
+
+
+  //var listener3 = new ROSLIB.Topic({
+  //  ros : ros,
+  //  name : '/lelio',
+  //  messageType : 'std_msgs/String'
+  //});
+
+  //listener3.subscribe(function(msg3) {
+  //  document.getElementById('rssi').innerHTML = msg3.data
+  //});
+
+</script>
+</head>
+
+<body>
+
+  <dl>
+    <div class="dl-item">
+      <dt>Battery Level</dt>
+      <dd><span id="powervoltage">..</span>%</dd>
+    </div>
+    <div class="dl-item">
+      <dt>Speed</dt>
+      <dd><span id="linearx">..</span>Km/Hr</dd>
+    </div>
+    <div class="dl-item">
+      <dt>4G Signal</dt>
+      <dd><span id="ltesignal">..</span></dd>
+    </div>
+  </dl>
+
+<!--
+ <div id="Cmd Velocity">cmd vel</div>
+  angular z<p id='angularz'>..</p>
+-->
+</body>
+</html>
